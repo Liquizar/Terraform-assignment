@@ -10,6 +10,12 @@ variable "key_name" {
   default     = "deployer-key"
 }
 
+variable "allowed_ports" {
+  description = "List of allowed ports for security group"
+  type        = list(number)
+  default     = [22, 80]
+}
+
 variable "public_key_path" {
   description = "Path to the public key file"
   type        = string
