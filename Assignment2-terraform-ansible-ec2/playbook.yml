@@ -1,0 +1,45 @@
+---
+- name: Setup and configure Nginx
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+    
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+    
+    - name: Start and enable Nginx service
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+    
+    - name: Create a simple HTML page
+      copy:
+        content: |
+          <html>
+          <head>
+            <title>Welcome to Nginx</title>
+          </head>
+          <body>
+            <h1>Hello, World!</h1>
+            <p>Welcome to your Nginx server!</p>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+    
+    - name: Allow Nginx service through UFW
+      ufw:
+        rule: allow
+        name: 'Nginx Full'
+    
+    - name: Enable UFW
+      ufw:
+        state: enabled
